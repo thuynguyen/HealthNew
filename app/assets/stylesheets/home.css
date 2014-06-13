@@ -1,0 +1,151 @@
+@import url(http://fonts.googleapis.com/css?family=Varela+Round);
+body{
+  zoom:1;
+}
+.nav-list{
+  list-style:none; 
+}
+
+.nav-list a{
+  text-decoration:none;
+  transition:color 0.3s ease-out;
+  color:inherit;
+}
+
+.nav-list li{
+  position:relative;
+  display:inline-block;
+  margin:5px;
+  letter-spacing:-1px;
+}
+
+
+.download:after, 
+.download:before,
+.download a:after, 
+.download a:before{
+  background-color:#CEDD3E;
+}
+
+.download:hover{
+  color:#CEDD3E
+}
+
+.features:after, 
+.features:before,
+.features a:after, 
+.features a:before{
+  background-color:#F27132;
+}
+
+.features:hover{
+  color:#F27132;
+}
+
+.method:after, 
+.method:before,
+.method a:after, 
+.method a:before{
+  background-color:#85C3E9;
+}
+
+.method:hover{
+  color:#85C3E9;
+}
+
+.purchase:after, 
+.purchase:before,
+.purchase a:after, 
+.purchase a:before{
+  background-color:#FDBE2A;
+}
+
+.purchase:hover{
+  color:#FDBE2A;
+}
+
+.nav-list li:after, 
+.nav-list li:before, 
+.nav-list  a:before, 
+.nav-list  a:after{
+  position:absolute;
+  content:'';
+  border-radius:4px;
+}
+
+.nav-list li:after,
+.nav-list li:before{
+  bottom:-4px;
+  height:4px;
+}
+
+.nav-list li:not(.selected):before{
+  left:0;
+  right:-2px;
+}
+
+.nav-list li.selected:after{
+  left:0;
+  right:39px; 
+}
+
+.nav-list li.selected:before{
+  right:-2px;
+  width:13px;
+}
+
+
+.nav-list .selected a:before{
+  height:22px;
+  width:4px;
+  bottom:-22px;
+  right:7px;
+}
+
+.nav-list .selected a:after{
+  height:4px;
+  width:40px;
+  bottom:-13px;
+  right:5px;
+  transform: rotate(30deg);
+  -webkit-transform:rotate(30deg);
+  -moz-transform: rotate(30deg);
+  -ms-filter:rotate(30deg);
+}
+
+/* Booring stuff*/
+
+body{
+  font-family: 'Varela Round', sans-serif;
+  font-size: 1em;
+}
+
+.wrapper{
+  width:70%;
+  margin:0 auto;
+}
+
+h1{
+  text-align:center;
+  padding-bottom:.5em;
+}
+
+footer{
+  margin-top:5em;
+  float:right;
+  font-size:.7em;
+}
+
+
+footer a{
+  color:#79B1D4;
+  text-decoration:none;
+}
+
+footer a:hover{
+  border-bottom:1px solid black;
+}
+
+.red{
+  color:#F27132;
+}
