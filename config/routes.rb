@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-  resources :patients
-
+  namespace :admin do
+    resources :patients
+    resources :services
+  end
   devise_scope :user do
     get "sign_in", to: "devise/sessions#new"
   end

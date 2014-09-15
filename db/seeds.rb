@@ -7,3 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 User.create(:email => "admin@gmail.com", password: "1234qwer", password_confirmation: "1234qwer")
+services = ["Kham Thai" => 60, "Sieu Am Thuong" => 80, "Sieu Am Mau" => 150, "Tuyen Giap" => 80]
+services.keys.each do |name|
+	Service.created(name: name, price: services[name])
+end

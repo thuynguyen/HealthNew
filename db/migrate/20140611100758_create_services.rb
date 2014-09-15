@@ -3,7 +3,6 @@ class CreateServices < ActiveRecord::Migration
     create_table :services do |t|
       t.string :name
       t.float :price
-      t.references :patient
 
       t.timestamps
     end
