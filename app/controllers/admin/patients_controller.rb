@@ -1,5 +1,4 @@
-class Admin::
-  PatientsController < ApplicationController
+class Admin::PatientsController < ApplicationController
   before_action :set_patient, only: [:show, :edit, :update, :destroy]
 
   # GET /patients

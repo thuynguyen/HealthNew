@@ -1,4 +1,4 @@
-= form_for @patient, :html => { :class => 'form-horizontal' } do |f|
+= form_for [:admin,@patient], :html => { :class => 'form-horizontal' } do |f|
   .control-group
     = f.label :name, :class => 'control-label'
     .controls
@@ -21,4 +21,4 @@
       = f.text_field :user_id, :class => 'text_field'
   .form-actions
     = f.submit nil, :class => 'btn btn-primary'
-    = link_to t('.cancel', :default => t("helpers.links.cancel")), patients_path, :class => 'btn'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_patients_path, :class => 'btn'
