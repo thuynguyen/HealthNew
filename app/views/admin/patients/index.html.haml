@@ -15,8 +15,8 @@
   %tbody
     - @patients.each do |patient|
       %tr
-        %td= link_to patient.id, patient_path(patient)
-        %td= patient.name
+        %td= patient.id
+        %td= link_to patient.name, admin_patient_path(patient)
         %td= patient.age
         %td= patient.year
         %td= patient.address
@@ -24,6 +24,6 @@
         %td=l patient.created_at
         %td
           = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(patient), :class => 'btn btn-mini'
-          = link_to t('.destroy', :default => t("helpers.links.destroy")), patient_path(patient), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
+          = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_patient_path(patient), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
 
 = link_to t('.new', :default => t("helpers.links.new")), new_admin_patient_path, :class => 'btn btn-primary'

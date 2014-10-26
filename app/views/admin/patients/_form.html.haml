@@ -1,24 +1,13 @@
-= form_for [:admin,@patient], :html => { :class => 'form-horizontal' } do |f|
-  .control-group
-    = f.label :name, :class => 'control-label'
-    .controls
-      = f.text_field :name, :class => 'text_field'
-  .control-group
-    = f.label :age, :class => 'control-label'
-    .controls
-      = f.text_field :age, :class => 'text_field'
-  .control-group
-    = f.label :year, :class => 'control-label'
-    .controls
-      = f.text_field :year, :class => 'text_field'
-  .control-group
-    = f.label :address, :class => 'control-label'
-    .controls
-      = f.text_field :address, :class => 'text_field'
-  .control-group
-    = f.label :user_id, :class => 'control-label'
-    .controls
-      = f.text_field :user_id, :class => 'text_field'
+= simple_nested_form_for [:admin,@patient], :html => { :class => 'form-horizontal' } do |f|
+  = f.input :name, :class => 'input'
+  = f.input :age, :class => 'input'
+  = f.input :year, :class => 'input'
+  = f.input :address, :class => 'input'
+  = f.input :user_id, :class => 'input'
+  = f.fields_for :services do |serv|
+    = serv.input :name, :collection => Service.all, :label => "Service Name"
+    = serv.link_to_remove "Remove this service"
+  %p= f.link_to_add "Add a service", :services
   .form-actions
     = f.submit nil, :class => 'btn btn-primary'
     = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_patients_path, :class => 'btn'

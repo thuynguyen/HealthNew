@@ -30,3 +30,5 @@ gem 'haml-rails', :group => :development
 
 gem 'bcrypt'
 gem 'devise'
+gem 'simple_form'
+gem "nested_form"
