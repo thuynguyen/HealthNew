@@ -1,4 +1,5 @@
 class Patient < ActiveRecord::Base
-  has_and_belongs_to_many :services
-  accepts_nested_attributes_for :services
+  has_many :patients_services
+  has_many :services, through: :patients_services
+  accepts_nested_attributes_for :services, :patients_services
 end

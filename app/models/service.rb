@@ -1,3 +1,4 @@
 class Service < ActiveRecord::Base
-	has_and_belongs_to_many :patients
+	has_many :patients_services
+	has_many :services, through: :patients_services
 end

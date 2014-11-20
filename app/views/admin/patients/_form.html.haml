@@ -3,7 +3,7 @@
   = f.input :age, :class => 'input'
   = f.input :year, :class => 'input'
   = f.input :address, :class => 'input'
-  = f.input :user_id, :class => 'input'
+  = f.input :user_id, :as => :hidden, :class => 'input'
   = f.fields_for :services do |serv|
     = serv.input :name, :collection => Service.all, :label => "Service Name"
     = serv.link_to_remove "Remove this service"
