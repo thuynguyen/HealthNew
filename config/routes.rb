@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     resources :patients
     resources :services
   end
+  get "admin", to: "admin/patients#index"
   devise_scope :user do
     get "sign_in", to: "devise/sessions#new"
   end

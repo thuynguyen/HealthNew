@@ -4,10 +4,12 @@
   = f.input :year, :class => 'input'
   = f.input :address, :class => 'input'
   = f.input :user_id, :as => :hidden, :class => 'input'
-  = f.fields_for :services do |serv|
-    = serv.input :name, :collection => Service.all, :label => "Service Name"
-    = serv.link_to_remove "Remove this service"
-  %p= f.link_to_add "Add a service", :services
+  = f.fields_for :patients_services do |p_serv|
+    = p_serv.input :patient_id, as: :hidden, input_html: { value: f.object.id}
+    = p_serv.simple_fields_for(:service) do |serv|
+      = p_serv.input :service_id, :collection => Service.all, :label => "Service Name"
+      = serv.link_to_remove "Remove this service"
+  %p= f.link_to_add "Add a service", :patients_services
   .form-actions
     = f.submit nil, :class => 'btn btn-primary'
     = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_patients_path, :class => 'btn'
