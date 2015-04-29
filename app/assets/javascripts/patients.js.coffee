@@ -38,8 +38,6 @@ class @Patient
 
   addNote: =>
     $(".patients").delegate ".add-note", "click", ->
-      $(".description").removeClass("hidden")
+      $('#add-des').modal('hide')
 
-    $(".patients").delegate ".btn-close", "click", ->
-      $(".description").addClass("hidden")
-
+    

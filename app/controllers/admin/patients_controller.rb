@@ -4,6 +4,9 @@ class Admin::PatientsController < ApplicationController
   # GET /patients
   # GET /patients.json
   def index
+    @patient = Patient.new
+    @services = @patient.services.build
+    
     @patients = Patient.where(created_at: Time.now.utc.strftime("%Y-%m-%d")..(Time.now.utc + 24.hours).strftime("%Y-%m-%d")).order("created_at")
     @service_id = ""
     if request.xhr?

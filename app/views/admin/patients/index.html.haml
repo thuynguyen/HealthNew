@@ -1,24 +1,37 @@
 .well
   
   = form_tag(admin_patients_path, method: :get, remote: true, class: "patiens-form") do
-    .datetimepicker4.input-append
+    .datetimepicker.input-append
       %input{"data-format" => "yyyy-MM-dd", :type => "text", id: "from_date", name: "from_date", placeholder: "Choose from date"}
       %span.add-on
         %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"}
 
-    .datetimepicker4.input-append
+    .datetimepicker.input-append
       %input{"data-format" => "yyyy-MM-dd", :type => "text", id: "to_date", name: "to_date", placeholder: "Choose to date"}
       %span.add-on
         %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"} 
-      %input{:type => "hidden", id: "export", name: "export"}
-      - if current_user.is_admin
-        = collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
+
+    %input{:type => "hidden", id: "export", name: "export"}
+    - if current_user.is_admin
+      = collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
     = submit_tag("Find", class: "btn btn-primary", style: "margin-top: -0.8em")
     - if current_user.is_admin
       = link_to "Export", admin_patients_path(:format => :xls, from_date: cookies[:from_date], to_date: cookies[:to_date]), class: "btn btn-primary btn-export", style: "margin-top: -0.8em"
+.pull-right= link_to "New Patient", "#", :class => 'btn btn-primary', "data-toggle"=>"modal", "data-target"=>"#newPatient"
 .patients
   = render "patients"
-= link_to t('.new', :default => t("helpers.links.new")), new_admin_patient_path, :class => 'btn btn-primary'
-
 :javascript
-  $(".datetimepicker4").datetimepicker({pickTime: false})
+  $(".datetimepicker").datetimepicker({pickTime: false})
+
+
+.form-patient
+  #newPatient.modal.hide{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+            %span{"aria-hidden" => "true"} ×
+          %h4#myModalLabel.modal-title Create Patient
+        .modal-body
+          = render "form"
+      
