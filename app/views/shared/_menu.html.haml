@@ -1,10 +1,25 @@
-.wrapper
-  %ul.nav-list
-    %li.download.selected
-      %a{href: "#"} Home
-    %li.features
-      %a{href: "#"} Manage
-    %li.method
-      %a{href: "#"} Patients
-    %li.purchase
-      %a{href: "#"} Incomes
+= stylesheet_link_tag "menu_styles"
+= javascript_include_tag "menu_script"
+#cssmenu
+  %ul
+    %li
+      %a{:href => "#"}
+        %span Home
+    %li{class: "#{params[:controller] == "admin/patients" ? 'active' : ''}"}
+      = link_to "Patients", admin_patients_path
+    %li{class: "#{params[:controller] == "admin/medicines" ? 'active' : ''}"}
+      = link_to "Medicines", admin_medicines_path
+    - if current_user.is_admin
+      %li{class: "#{params[:controller] == "admin/users" ? 'active' : ''}"}
+        = link_to "Users", admin_users_path
+    %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
+      = link_to "Services", admin_services_path
+   
+      
+
+  .pull-right
+    -if current_user
+      = current_user.first_name.to_s + " " + current_user.last_name.to_s
+      |
+      = link_to "Sign Out", destroy_user_session_path, method: :delete
+  .clearfix

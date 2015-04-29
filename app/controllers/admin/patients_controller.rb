@@ -1,12 +1,53 @@
 class Admin::PatientsController < ApplicationController
-  before_action :set_patient, only: [:show, :edit, :update, :destroy]
+  before_action :set_patient, only: [:show, :edit, :update, :destroy, :add_note]
 
   # GET /patients
   # GET /patients.json
   def index
-    @patients = Patient.all
+    @patients = Patient.where(created_at: Time.now.utc.strftime("%Y-%m-%d")..(Time.now.utc + 24.hours).strftime("%Y-%m-%d")).order("created_at")
+    @service_id = ""
+    if request.xhr?
+      @service_id = params[:service][:id]
+      @patients = Patient.data_export_to_excel(params).order("patients.created_at")
+      unless params[:from_date].blank?
+        cookies[:from_date] = params[:from_date]
+      else
+        cookies.delete :from_date
+      end
+      unless params[:to_date].blank?
+        cookies[:to_date] = params[:to_date]
+      else
+        cookies.delete :to_date
+      end
+      unless params[:service][:id].blank?
+        cookies[:service_id] = params[:service][:id]
+      else
+        cookies.delete :service_id
+      end
+      
+    end
+
+    respond_to do |format|
+      format.html # don't forget if you pass html
+      format.js # don't forget if you pass html
+      format.xls { 
+        patients = Patient.data_export_to_excel({from_date: cookies[:from_date], to_date: cookies[:to_date], service: {id: cookies[:service_id]}})
+        filename = "Patients-#{Time.now.strftime("%Y-%m-%d")}.xls"
+        send_data(patients.map{|p| p.as_json}.to_xls, :type => "text/xls; charset=utf-8; header=present", :filename => filename) 
+      }
+    end
   end
 
+  def add_note
+    @patient.update_attributes(:description => params[:patient][:description])
+    #render partial: "description", locals: {patient: @patient}
+  end
+  
+  def paid
+    patient = Patient.find_by_id(params[:id])
+    patient.update_attributes(is_paid: params[:is_paid])
+    render json: {is_paid: params[:is_paid]}
+  end
   # GET /patients/1
   # GET /patients/1.json
   def show
@@ -70,6 +111,6 @@ class Admin::PatientsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def patient_params
-      params.require(:patient).permit(:name, :age, :year, :address, patients_services_attributes: [:patient_id, :service_id])
+      params.require(:patient).permit(:name, :age, :year, :address, :user_id, :description, patients_services_attributes: [:patient_id, :service_id, :price])
     end
 end

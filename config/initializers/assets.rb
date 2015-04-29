@@ -1,0 +1,1 @@
+Rails.application.config.assets.precompile += %w( menu_styles.css menu_script.js)

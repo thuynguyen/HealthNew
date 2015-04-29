@@ -1,0 +1,23 @@
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th Name
+      %th Description
+      %th Expired date
+      %th
+      %th
+      %th
+  %tbody
+
+    - @medicines.each do |medicine|
+      %tr
+        %td= medicine.name
+        %td= medicine.description
+        %td= medicine.expired_date
+        %td= link_to 'Show', [:admin,medicine]
+        %td= link_to 'Edit', edit_admin_medicine_path(medicine)
+        %td= link_to 'Destroy', [:admin, medicine], :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Medicine', new_admin_medicine_path

@@ -1,29 +1,29 @@
 - model_class = Patient
 .page-header
-  %h1=t '.title', :default => model_class.model_name.human.titleize
+  %h1 Thông Tin Bệnh Nhân
 
 %p
-  %strong= model_class.human_attribute_name(:name) + ':'
-  %br
-  = @patient.name
+  %strong.pull-left= "Tên" + ': '
+  .pull-left= @patient.name
+  .clearfix
 %p
-  %strong= model_class.human_attribute_name(:age) + ':'
-  %br
-  = @patient.age
+  %strong.pull-left= "Tuổi" + ': '
+  .pull-left= @patient.age
+  .clearfix
 %p
-  %strong= model_class.human_attribute_name(:year) + ':'
-  %br
-  = @patient.year
+  %strong.pull-left= "Ngày Sinh" + ': '
+  .pull-left= @patient.year
+  .clearfix
 %p
-  %strong= model_class.human_attribute_name(:address) + ':'
-  %br
-  = @patient.address
+  %strong.pull-left= 'Địa Chỉ' + ': '
+  .pull-left= @patient.address
+  .clearfix
 %p
-  %strong= model_class.human_attribute_name(:user_id) + ':'
-  %br
-  = @patient.user_id
+  %strong.pull-left= model_class.human_attribute_name(:user_id) + ': '
+  .pull-left= #@patient.user_id
+  .clearfix
 
 .form-actions
-  = link_to t('.back', :default => t("helpers.links.back")), patients_path, :class => 'btn'
-  = link_to t('.edit', :default => t("helpers.links.edit")), edit_patient_path(@patient), :class => 'btn'
-  = link_to t('.destroy', :default => t("helpers.links.destroy")), patient_path(@patient), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+  = link_to t('.back', :default => t("helpers.links.back")), admin_patients_path, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(@patient), :class => 'btn'
+  = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_patient_path(@patient), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

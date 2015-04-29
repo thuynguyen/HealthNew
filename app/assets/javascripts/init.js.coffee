@@ -1,0 +1,2 @@
+$ ->
+  window.patientObj = new Patient()

@@ -1,13 +1,21 @@
 Rails.application.routes.draw do
   namespace :admin do
-    resources :patients
+    resources :users
+    resources :patients do 
+      member do 
+        put :paid
+        put :add_note
+        get :new_note
+      end
+    end
     resources :services
+    resources :medicines
   end
   get "admin", to: "admin/patients#index"
-  devise_scope :user do
+  devise_for :users do
     get "sign_in", to: "devise/sessions#new"
   end
-  resources :services
+  #resources :services
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

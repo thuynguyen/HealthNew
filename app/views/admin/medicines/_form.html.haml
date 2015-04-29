@@ -1,0 +1,16 @@
+= simple_form_for([:admin, @medicine]) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :description
+    .datetimepicker4.input-append
+      .pull-left= f.input :expired_date, as: :string, input_html: {"data-format" => "yyyy-MM-dd"}
+      %div.add-on.pull-lleft{style: "margin-top: 1.8em;"}
+        %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"} 
+      .clearfix
+  .form-actions
+    = f.button :submit
+:javascript
+  $(".datetimepicker4").datetimepicker({pickTime: false})
+

@@ -1,8 +1,8 @@
-@import url(http://fonts.googleapis.com/css?family=Varela+Round);
+/*@import url(http://fonts.googleapis.com/css?family=Varela+Round);*/
 body{
-  zoom:1;
+  background: #EBEBEB;
 }
-.nav-list{
+/*.nav-list{
   list-style:none; 
 }
 
@@ -115,7 +115,7 @@ body{
 
 /* Booring stuff*/
 
-body{
+/*body{
   font-family: 'Varela Round', sans-serif;
   font-size: 1em;
 }
@@ -148,4 +148,4 @@ footer a:hover{
 
 .red{
   color:#F27132;
-}
+}*/
