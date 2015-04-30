@@ -1,0 +1,10 @@
+= form_tag(statistic_admin_patients_path, method: :get, remote: true, class: "patiens-form") do
+  = select_year(Date.today, start_year: 2015, end_year: 2020, prompt: 'Choose year')
+  = select_month(Date.today, use_short_month: true)
+  .weeks_of_month
+    = render partial: "load_week", locals: {weeks: @weeks}
+  = collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
+  = submit_tag("Thong Ke", class: "btn btn-primary", style: "margin-top: -0.8em")
+
+.statistics
+  = render :partial => "load_data_statistic", locals: {results: @results}

@@ -1,0 +1,23 @@
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th Name
+      %th Ghi Chu
+      - if current_user.is_admin
+        %th Thu Vao
+      %th
+      %th
+      %th
+  %tbody
+    - @user_tests.each do |user_test|
+      %tr
+        %td= user_test.test.name
+        %td= user_test.description
+        - if current_user.is_admin
+          %td= user_test.test.price - user_test.test.origin_price
+        %td= link_to 'Edit', edit_admin_user_test_path(user_test)
+        %td= link_to 'Destroy', [:admin, user_test], :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New', new_admin_user_test_path

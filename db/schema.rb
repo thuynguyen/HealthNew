@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140915011739) do
+ActiveRecord::Schema.define(version: 20150430081319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admin_medicines", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "expired_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "medicines", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "expired_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.float    "quantity"
+    t.float    "money"
+  end
 
   create_table "patients", force: true do |t|
     t.string   "name"
@@ -24,11 +42,16 @@ ActiveRecord::Schema.define(version: 20140915011739) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_paid",     default: false
+    t.text     "description"
+    t.string   "phone"
+    t.integer  "order"
   end
 
-  create_table "patients_services", id: false, force: true do |t|
+  create_table "patients_services", force: true do |t|
     t.integer  "patient_id"
     t.integer  "service_id"
+    t.float    "price"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -40,20 +63,48 @@ ActiveRecord::Schema.define(version: 20140915011739) do
     t.datetime "updated_at"
   end
 
+  create_table "tests", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.float    "price"
+    t.float    "origin_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_medicines", force: true do |t|
+    t.string   "name"
+    t.float    "quantity"
+    t.string   "money"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_tests", force: true do |t|
+    t.integer  "test_id"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "", null: false
+    t.string   "email",                  default: "",    null: false
     t.integer  "admin_id"
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.boolean  "is_admin",               default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

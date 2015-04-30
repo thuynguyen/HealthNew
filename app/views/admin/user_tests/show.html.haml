@@ -1,0 +1,9 @@
+%p#notice= notice
+
+%p
+  %b Test:
+  = @user_test.test_id
+
+= link_to 'Edit', edit_admin_user_test_path(@user_test)
+\|
+= link_to 'Back', admin_user_tests_path

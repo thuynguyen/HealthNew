@@ -3,6 +3,7 @@ class Patient < ActiveRecord::Base
   has_many :patients_services
   has_many :services, through: :patients_services
   belongs_to :user
+  validates :phone, presence: true
 
   accepts_nested_attributes_for :patients_services
 
@@ -15,30 +16,31 @@ class Patient < ActiveRecord::Base
       conds[:service_id] = options[:service][:id]
     else
        conds[:service_id] = nil
-    end
+    end if !options[:service].blank?
     if options[:to_date].blank? && !options[:from_date].blank?
       conds[:range_time] = [options[:from_date],(options[:from_date].to_datetime + 1.day)]
-  	  #results = self.where(created_at: ) 
     elsif options[:from_date].blank? && !options[:to_date].blank?
-      #results = self.where(created_at: options[:to_date]..(options[:to_date].to_datetime + 1.day))
       conds[:range_time] = [options[:to_date],(options[:to_date].to_datetime + 1.day)]
     elsif !options[:from_date].blank? && !options[:to_date].blank?
       conds[:range_time] = [options[:from_date],(options[:to_date].to_datetime + 1.day)]
-      #results = self.where(created_at: options[:from_date]..(options[:to_date].to_datetime + 1.day)) 
     end
-    if options[:from_date].blank? && options[:to_date].blank? && options[:service][:id].blank?
-      results = self.all 
+    if options[:from_date].blank? && options[:to_date].blank? && conds[:service_id].blank?
+      results = Patient.where(created_at: Time.now.utc.strftime("%Y-%m-%d")..(Time.now.utc + 24.hours).strftime("%Y-%m-%d")) 
     elsif options[:from_date].blank? && options[:to_date].blank? && !options[:service][:id].blank?
-      results = self.joins(:services).where("services.id = ?", conds[:service_id])
+      results = self.joins(:services).select("distinct(patients.*)").where("services.id = ?", conds[:service_id])
     else
       if conds[:service_id].blank?
-        results = self.joins(:services).where("patients.created_at between (?) and (?)", conds[:range_time].first, conds[:range_time].last)
+        results = self.joins(:services).select("distinct(patients.*)").where("patients.created_at between (?) and (?)", conds[:range_time].first, conds[:range_time].last)
       else
-        results = self.joins(:services).where("patients.created_at between (?) and (?) and services.id = ?", conds[:range_time].first, conds[:range_time].last, conds[:service_id])
+        results = self.joins(:services).select("distinct(patients.*)").where("patients.created_at between (?) and (?) and services.id = ?", conds[:range_time].first, conds[:range_time].last, conds[:service_id])
       end
       
     end
-    results || []
+    sum_money = 0.0
+    results.each do |p|
+      sum_money = sum_money + p.calculate_price(conds[:service_id])
+    end
+    {patients: results.order("created_at DESC"), total_money: sum_money, service: Service.find_by_id(conds[:service_id]).try(:name) || "All"}
   end
 
   def as_json(options={})
@@ -55,21 +57,17 @@ class Patient < ActiveRecord::Base
   end
   def calculate_price(service_id = nil)
     cal_price = 0.0
-    service_id = self.services.find_by_name("Khac").try(:id)
+    service_id = self.services.find_by_name("Khac").try(:id) if service_id.blank?
     unless service_id.blank?
-      p_service = PatientsService.find_by_service_id(service_id)
-      other_price = p_service.price
-      cal_price = other_price
+      sers = self.patients_services.where(service_id: service_id).select{|s| !s.price.nil?}.map{|l| l.price}
+      cal_price = sers.inject(:+) unless sers.blank?
     end
-    if service_id.blank?
-      sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
-    else
-      sers = self.services.where(:id => service_id).select{|s| !s.price.nil?}.map{|l| l.price} 
-    end
+    
+    sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
+    puts "============#{sers.inspect}"
     cal_price = cal_price + sers.inject(:+) unless sers.blank?
     cal_price 
   end
-  
 end
 
 

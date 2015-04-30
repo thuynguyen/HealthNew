@@ -1,0 +1,12 @@
+%table.table.table-striped.table-hover.tbl-list-patients
+  %thead
+    %tr
+      %th= "Tổng số khách"
+      %th= "Loại Khám"
+      %th= "Tổng Tiền"
+
+  %tbody
+    %tr
+      %td= results[:patients].size
+      %td= results[:service]
+      %td= results[:total_money]

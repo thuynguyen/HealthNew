@@ -6,10 +6,18 @@ Rails.application.routes.draw do
         put :paid
         put :add_note
         get :new_note
+        get :history
+      end
+      collection do
+        get :statistic
+        get :load_weeks_of_month
       end
     end
     resources :services
     resources :medicines
+    resources :user_medicines
+    resources :user_tests
+    resources :tests
   end
   get "admin", to: "admin/patients#index"
   devise_for :users do

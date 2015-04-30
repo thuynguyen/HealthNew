@@ -4,12 +4,14 @@ class @Patient
     @otherPrice()
     @checkPaid()
     @addNote()
+    @focusPatient()
+    @changeMonth()
 
   datePicker: =>
     $("#datetimepicker4").datetimepicker pickTime: false
 
   otherPrice: =>
-    $(".form-patient").delegate "select", "change", ->
+    $(".patients").delegate "select", "change", ->
       selected_value = $("select option:selected").last().text()
       console.log(selected_value)
       if (selected_value == "Khac")
@@ -39,5 +41,31 @@ class @Patient
   addNote: =>
     $(".patients").delegate ".add-note", "click", ->
       $('#add-des').modal('hide')
+
+  focusPatient: =>
+    $(".patients").delegate ".tbl-list-patients tbody .patient", "click", (e)->
+      $(".patient").css("background-color", "white")
+      $(e.currentTarget).css("background-color", "#67BCDB")
+      return
+
+  changeMonth: =>
+    $("#date_month").change (e)->
+      year = $("#date_year").val()
+      month = $(e.currentTarget).val()
+      $.ajax
+        type: "GET"
+        url: "/admin/patients/load_weeks_of_month"
+        data:
+          month: month
+          year: year
+
+        success: (data) ->
+          $(".weeks_of_month").html(data)
+          return
+
+        error: (errors, status) ->
+
+
+
 
     

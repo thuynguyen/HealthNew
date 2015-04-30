@@ -1,0 +1,18 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @test.name
+%p
+  %b Description:
+  = @test.description
+%p
+  %b Price:
+  = @test.price
+%p
+  %b Origin price:
+  = @test.origin_price
+
+= link_to 'Edit', edit_admin_test_path(@test)
+\|
+= link_to 'Back', admin_tests_path

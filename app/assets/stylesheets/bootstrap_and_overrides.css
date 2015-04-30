@@ -8,3 +8,6 @@
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: #eeefff;
 }
+.form-horizontal .control-group {
+  margin-bottom: 6px;
+}

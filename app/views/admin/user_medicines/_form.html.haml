@@ -1,0 +1,13 @@
+= simple_form_for([:admin, @user_medicine]) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :quantity
+    = f.input :money
+    = f.input :description
+
+  .form-actions
+    = f.button :submit
+    = link_to 'Back', admin_user_medicines_path, class: "btn"
+

@@ -1,17 +1,14 @@
 class Admin::PatientsController < ApplicationController
-  before_action :set_patient, only: [:show, :edit, :update, :destroy, :add_note]
+  before_action :set_patient, only: [:show, :edit, :update, :destroy, :add_note, :history]
 
   # GET /patients
   # GET /patients.json
   def index
-    @patient = Patient.new
-    @services = @patient.services.build
-    
-    @patients = Patient.where(created_at: Time.now.utc.strftime("%Y-%m-%d")..(Time.now.utc + 24.hours).strftime("%Y-%m-%d")).order("created_at")
+    @results = Patient.data_export_to_excel(params)
+    @patients = @results[:patients]
     @service_id = ""
     if request.xhr?
       @service_id = params[:service][:id]
-      @patients = Patient.data_export_to_excel(params).order("patients.created_at")
       unless params[:from_date].blank?
         cookies[:from_date] = params[:from_date]
       else
@@ -34,7 +31,8 @@ class Admin::PatientsController < ApplicationController
       format.html # don't forget if you pass html
       format.js # don't forget if you pass html
       format.xls { 
-        patients = Patient.data_export_to_excel({from_date: cookies[:from_date], to_date: cookies[:to_date], service: {id: cookies[:service_id]}})
+        @results = Patient.data_export_to_excel({from_date: cookies[:from_date], to_date: cookies[:to_date], service: {id: cookies[:service_id]}})
+        patients = @results[:patients]      
         filename = "Patients-#{Time.now.strftime("%Y-%m-%d")}.xls"
         send_data(patients.map{|p| p.as_json}.to_xls, :type => "text/xls; charset=utf-8; header=present", :filename => filename) 
       }
@@ -70,32 +68,53 @@ class Admin::PatientsController < ApplicationController
   # POST /patients.json
   def create
     @patient = Patient.new(patient_params)
-
-    respond_to do |format|
-      if @patient.save
-        format.html { redirect_to admin_patients_path, notice: 'Patient was successfully created.' }
-        format.json { render :show, status: :created, location: @patient }
-      else
-        format.html { render :new }
-        format.json { render json: @patient.errors, status: :unprocessable_entity }
-      end
-    end
+    @patient.save
+    @results = Patient.data_export_to_excel(params)
+    @patients = @results[:patients]
   end
 
   # PATCH/PUT /patients/1
   # PATCH/PUT /patients/1.json
   def update
-    respond_to do |format|
-      if @patient.update(patient_params)
-        format.html { redirect_to admin_patients_path, notice: 'Patient was successfully updated.' }
-        format.json { render :show, status: :ok, location: @patient }
+    @patient.update(patient_params)
+    @results = Patient.data_export_to_excel(params)
+    @patients = @results[:patients]
+  end
+
+  def statistic
+    @results = Patient.data_export_to_excel(params)
+    mondays = Date.today.week_split
+    @weeks = []
+    mondays.each_with_index do |monday, index|
+      monday = monday.select{|d| !d.nil?}.join("_")
+      index += 1
+      @weeks << ["Tuan #{index}", monday]
+    end
+    if request.xhr?
+      puts "===#{params[:week].inspect}=============#{params[:date][:year].inspect} #{params[:date][:month].inspect}"
+      if params[:week].blank?
+        from_date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, 1).beginning_of_month
+        to_date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, 1).end_of_month
       else
-        format.html { render :edit }
-        format.json { render json: @patient.errors, status: :unprocessable_entity }
+        days = params[:week].split("_")
+        from_date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, days.first.to_i)
+        to_date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, days.last.to_i)
       end
+      @results = Patient.data_export_to_excel({from_date: from_date, to_date: to_date, service: {id: params[:service][:id]}})
     end
   end
 
+
+  def load_weeks_of_month
+    mondays = Date.new(params[:year].to_i,params[:month].to_i, 1).week_split
+    @weeks = []
+    mondays.each_with_index do |monday, index|
+      monday = monday.select{|d| !d.nil?}.join("_")
+      index += 1
+      @weeks << ["Tuan #{index}", monday]
+    end
+    render partial: "load_week", :locals => {weeks: @weeks}
+  end
   # DELETE /patients/1
   # DELETE /patients/1.json
   def destroy
@@ -106,6 +125,10 @@ class Admin::PatientsController < ApplicationController
     end
   end
 
+  def history
+    @patients = Patient.where(phone: @patient.phone)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_patient
@@ -114,6 +137,7 @@ class Admin::PatientsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def patient_params
-      params.require(:patient).permit(:name, :age, :year, :address, :user_id, :description, patients_services_attributes: [:patient_id, :service_id, :price])
+      params.require(:patient).permit(:name, :age, :year, :address, :phone, :order, :user_id, 
+        :description, patients_services_attributes: [:id, :patient_id, :service_id, :price])
     end
 end

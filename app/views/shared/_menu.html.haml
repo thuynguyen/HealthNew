@@ -9,11 +9,18 @@
       = link_to "Patients", admin_patients_path
     %li{class: "#{params[:controller] == "admin/medicines" ? 'active' : ''}"}
       = link_to "Medicines", admin_medicines_path
-    - if current_user.is_admin
-      %li{class: "#{params[:controller] == "admin/users" ? 'active' : ''}"}
-        = link_to "Users", admin_users_path
     %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
       = link_to "Services", admin_services_path
+    
+    %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
+      = link_to "Sét Nghiệm", admin_user_tests_path
+    %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
+      = link_to "Xuất Thuốc", admin_user_medicines_path
+    - if current_user.is_admin
+      %li{class: "#{params[:controller] == "admin/test" ? 'active' : ''}"}
+        = link_to "Loại Sét Nghiệm", admin_tests_path
+      %li{class: "#{params[:controller] == "admin/users" ? 'active' : ''}"}
+        = link_to "Users", admin_users_path
    
       
 

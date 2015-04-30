@@ -1,0 +1,36 @@
+- model_class = Patient
+.page-header
+  / %h1=t '.title', :default => model_class.model_name.human.pluralize.titleize
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th{style: "width: 8%"}= "Tên"
+      %th{style: "width: 5%"}= "Tuổi"
+      %th{style: "width: 8%"}= "Phone"
+      %th{style: "width: 16%"}= "Địa Chỉ"
+      %th{style: "width: 11%"}= "Người Trực"
+      %th{style: "width: 20%"}= "Khám"
+      %th{style: "width: 8%"}= "Thành Tiền"
+      %th{style: "width: 8%"}= "Ngày Khám"
+      
+      %th{style: "width: 8%"}
+        - unless current_user.is_admin
+          Ghi Chu
+  %tbody
+    - @patients.each do |patient|
+      %tr
+        %td= link_to patient.name, admin_patient_path(patient)
+        %td= patient.age || patient.year
+        %td= patient.phone
+        %td= patient.address
+        %td= patient.user.try(:name)
+        %th
+          - if @service_id.blank?
+            = patient.services.map(&:name).join(", ")
+          - else
+            = patient.services.where(id: @service_id).map(&:name).join(", ")
+        %th= patient.calculate_price(@service_id)
+        %td= patient.created_at.strftime("%d-%m-%Y at %I:%M%p")
+        
+        %td
+          

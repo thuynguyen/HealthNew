@@ -1,0 +1,12 @@
+= simple_form_for([:admin, @test]) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :description
+    = f.input :price
+    = f.input :origin_price
+
+  .form-actions
+    = f.button :submit
+    = link_to 'Cancel', admin_tests_path, class: "btn"

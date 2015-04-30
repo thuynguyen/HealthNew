@@ -1,24 +1,26 @@
 - model_class = Patient
 .page-header
   / %h1=t '.title', :default => model_class.model_name.human.pluralize.titleize
-%table.table.table-striped.table-hover
+%table.table.table-striped.table-hover.tbl-list-patients
   %thead
     %tr
       %th{style: "width: 8%"}= "Tên"
+      %th{style: "width: 4%"}= "STT"
       %th{style: "width: 5%"}= "Tuổi"
-      %th{style: "width: 16%"}= "Địa Chỉ"
+      %th{style: "width: 12%"}= "Địa Chỉ"
       %th{style: "width: 11%"}= "Người Trực"
       %th{style: "width: 20%"}= "Khám"
       %th{style: "width: 8%"}= "Thành Tiền"
       %th{style: "width: 8%"}= "Ngày Khám"
-      %th{style: "width: 8%"}= "Thanh Toán"
+      /%th{style: "width: 8%"}= "Thanh Toán"
       %th{style: "width: 8%"}
         - unless current_user.is_admin
           Ghi Chu
   %tbody
-    - @patients.each do |patient|
-      %tr{style: "position: relative;"}
-        %td= link_to patient.name, admin_patient_path(patient)
+    - patients.each do |patient|
+      %tr.patient
+        %td= link_to patient.name, history_admin_patient_path(patient)
+        %td= patient.order
         %td= patient.age || patient.year
         %td= patient.address
         %td= patient.user.try(:name)
@@ -29,26 +31,30 @@
             = patient.services.where(id: @service_id).map(&:name).join(", ")
         %th= patient.calculate_price(@service_id)
         %td= patient.created_at.strftime("%d-%m-%Y at %I:%M%p")
-        %td{"data-patient-id" => patient.id}= check_box_tag 'is_paid', patient.is_paid, patient.is_paid
+        / %td{"data-patient-id" => patient.id}= check_box_tag 'is_paid', patient.is_paid, patient.is_paid
         %td
-          / - if current_user.is_admin
-          /   = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(patient), :class => 'btn btn-mini'
-          /   = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_patient_path(patient), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
-          / - else
-          .des-content
-          
-          = link_to "Note", "#", class: "btn btn-primary add-note", "data-toggle"=>"modal", "data-target"=>"#add-des-#{patient.id}"
+          - if current_user.is_admin
+            = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(patient.id), remote: true, :class => 'btn btn-mini'
+            = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_patient_path(patient), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
+          - else
+            .des-content
+            
+            = link_to "Note", "#", class: "btn btn-primary add-note", "data-toggle"=>"modal", "data-target"=>"#add-des-#{patient.id}"
 
-          .modal-add-des
-            .add-des.modal.hide{id: "add-des-#{patient.id}","aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-              .modal-dialog
-                .modal-content
-                  .modal-header
-                    %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-                      %span{"aria-hidden" => "true"} ×
-                    %h4#myModalLabel.modal-title Ghi Chu
-                  .modal-body
-                    = form_tag(add_note_admin_patient_path(patient.id), method: :put, remote: true, class: "patiens-form") do
-                      = text_area(:patient, :description, size: 50)
-                      = submit_tag("Add", class: "btn btn-primary", style: "margin-top: -0.8em")
+            .modal-add-des
+              .add-des.modal.hide{id: "add-des-#{patient.id}","aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+                .modal-dialog
+                  .modal-content
+                    .modal-header
+                      %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                        %span{"aria-hidden" => "true"} ×
+                      %h4#myModalLabel.modal-title Ghi Chu
+                    .modal-body
+                      = form_tag(add_note_admin_patient_path(patient.id), method: :put, remote: true, class: "patiens-form") do
+                        = text_area(:patient, :description, size: 50)
+                        = submit_tag("Add", class: "btn btn-primary", style: "margin-top: -0.8em")
+     
+%div 
+  Tong Tien:
+  = @results[:total_money]       
 

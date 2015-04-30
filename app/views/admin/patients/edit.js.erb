@@ -1,0 +1,3 @@
+$(".patients").append("<%= escape_javascript(render partial: 'form', locals: {patient: @patient, title: 'Edit Patient'}) %>")
+$('#newPatient').modal('show')
+

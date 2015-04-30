@@ -1,0 +1,24 @@
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th Name
+      %th Quantity
+      %th Money
+      %th Description
+      %th
+      %th
+      %th
+  %tbody
+    - @user_medicines.each do |user_medicine|
+      %tr
+        %td= user_medicine.name
+        %td= user_medicine.quantity
+        %td= user_medicine.money
+        %td= user_medicine.description
+        %td= link_to 'Show', [:admin, user_medicine]
+        %td= link_to 'Edit', edit_admin_user_medicine_path(user_medicine)
+        %td= link_to 'Destroy', [:admin, user_medicine], :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New User medicine', new_admin_user_medicine_path
