@@ -12,9 +12,9 @@
     %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
       = link_to "Services", admin_services_path
     
-    %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
+    %li{class: "#{params[:controller] == "admin/user_tests" ? 'active' : ''}"}
       = link_to "Sét Nghiệm", admin_user_tests_path
-    %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
+    %li{class: "#{params[:controller] == "admin/user_medicines" ? 'active' : ''}"}
       = link_to "Xuất Thuốc", admin_user_medicines_path
     - if current_user.is_admin
       %li{class: "#{params[:controller] == "admin/test" ? 'active' : ''}"}
