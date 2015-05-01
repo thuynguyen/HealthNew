@@ -1,10 +1,56 @@
 = form_tag(statistic_admin_patients_path, method: :get, remote: true, class: "patiens-form") do
-  = select_year(Date.today, start_year: 2015, end_year: 2020, prompt: 'Choose year')
-  = select_month(Date.today, use_short_month: true)
-  .weeks_of_month
+  .pull-left
+    = select_year(Date.today, start_year: 2015, end_year: 2020, prompt: 'Choose year')
+    = select_month(Date.today, use_short_month: true)
+  .weeks_of_month.pull-left
     = render partial: "load_week", locals: {weeks: @weeks}
-  = collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
-  = submit_tag("Thong Ke", class: "btn btn-primary", style: "margin-top: -0.8em")
+  .pull-left= collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
+  .pull-left= submit_tag("Thong Ke", class: "btn btn-primary", style: "margin-top: -0.8em")
+  .clearfix
 
 .statistics
   = render :partial => "load_data_statistic", locals: {results: @results}
+#container
+:javascript
+  $('#container').highcharts({
+      title: {
+          text: 'Thu Nhap Hang Thang',
+          x: -20 //center
+      },
+      subtitle: {
+          text: '',//View Data of Patients and Income
+          x: -20
+      },
+      xAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      yAxis: {
+          title: {
+              text: 'Patients'
+          },
+          plotLines: [{
+              value: 0,
+              width: 1,
+              color: '#808080'
+          }]
+      },
+      tooltip: {
+          valueSuffix: '°C'
+      },
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle',
+          borderWidth: 0
+      },
+      series: [{
+          name: 'So Luong Khack',
+          data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+      },
+      {
+          name: 'So Tien Thu Vao',
+          data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+      }
+      ]
+  });

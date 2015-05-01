@@ -6,6 +6,7 @@ class @Patient
     @addNote()
     @focusPatient()
     @changeMonth()
+    @loadPatientInfo()
 
   datePicker: =>
     $("#datetimepicker4").datetimepicker pickTime: false
@@ -65,6 +66,24 @@ class @Patient
 
         error: (errors, status) ->
 
+  loadPatientInfo: =>
+    $(".patients").delegate "#patient_phone", "blur", (e)->
+      phone = $(e.currentTarget).val()
+      if phone != ""
+        $.ajax
+          type: "GET"
+          url: "/admin/patients/load_patient_info"
+          data:
+            phone: phone
+
+          success: (data) ->
+            $("#patient_name").val(data["name"])
+            $("#patient_age").val(data["age"])
+            $("#patient_year").val(data["year"])
+            $("#patient_address").val(data["address"])
+            return
+
+        error: (errors, status) ->
 
 
 

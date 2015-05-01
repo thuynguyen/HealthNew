@@ -91,7 +91,6 @@ class Admin::PatientsController < ApplicationController
       @weeks << ["Tuan #{index}", monday]
     end
     if request.xhr?
-      puts "===#{params[:week].inspect}=============#{params[:date][:year].inspect} #{params[:date][:month].inspect}"
       if params[:week].blank?
         from_date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, 1).beginning_of_month
         to_date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, 1).end_of_month
@@ -114,6 +113,11 @@ class Admin::PatientsController < ApplicationController
       @weeks << ["Tuan #{index}", monday]
     end
     render partial: "load_week", :locals => {weeks: @weeks}
+  end
+
+  def load_patient_info
+    @patient = Patient.find_by_phone(params[:phone])
+    render json: @patient
   end
   # DELETE /patients/1
   # DELETE /patients/1.json

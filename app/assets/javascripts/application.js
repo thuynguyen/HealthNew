@@ -15,6 +15,7 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require bootstrap-datetimepicker.min
+//= require highcharts
 //= require jquery_nested_form
 //= require menu_script
 //= require patients
