@@ -7,6 +7,7 @@ class @Patient
     @focusPatient()
     @changeMonth()
     @loadPatientInfo()
+    @clearModal()
 
   datePicker: =>
     $("#datetimepicker4").datetimepicker pickTime: false
@@ -84,6 +85,12 @@ class @Patient
             return
 
         error: (errors, status) ->
+
+  clearModal: =>
+    $(".patients").delegate ".btn-close-patient", "click", () ->
+      $('#newPatient').on 'hidden', ->
+        $(this).data 'modal', null
+      return
 
 
 

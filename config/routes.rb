@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  
+
   namespace :admin do
     resources :users
     resources :patients do 
@@ -11,6 +13,7 @@ Rails.application.routes.draw do
       collection do
         get :statistic
         get :load_weeks_of_month
+        get :load_patient_info
       end
     end
     resources :services
@@ -18,6 +21,7 @@ Rails.application.routes.draw do
     resources :user_medicines
     resources :user_tests
     resources :tests
+    resources :price_medicines
   end
   get "admin", to: "admin/patients#index"
   devise_for :users do

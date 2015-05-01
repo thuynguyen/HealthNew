@@ -7,11 +7,13 @@
       %th{style: "width: 8%"}= "Tên"
       %th{style: "width: 4%"}= "STT"
       %th{style: "width: 5%"}= "Tuổi"
-      %th{style: "width: 12%"}= "Địa Chỉ"
+      %th{style: "width: 5%"}= "Địa Chỉ"
       %th{style: "width: 11%"}= "Người Trực"
-      %th{style: "width: 20%"}= "Khám"
+      %th{style: "width: 14%"}= "Khám"
+      %th{style: "width: 11%"}= "Thuốc"
+      %th{style: "width: 10%"}= "XN"
       %th{style: "width: 8%"}= "Thành Tiền"
-      %th{style: "width: 8%"}= "Ngày Khám"
+      
       /%th{style: "width: 8%"}= "Thanh Toán"
       %th{style: "width: 8%"}
         - unless current_user.is_admin
@@ -29,12 +31,22 @@
             = patient.services.map(&:name).join(", ")
           - else
             = patient.services.where(id: @service_id).map(&:name).join(", ")
+        %th
+          - if @price_medicine_id.blank?
+            = patient.price_medicines.map(&:name).join(", ")
+          - else
+            = patient.price_medicines.where(id: @price_medicine_id).map(&:name).join(", ")
+        %th
+          - if @test_id.blank?
+            = patient.tests.map(&:name).join(", ")
+          - else
+            = patient.tests.where(id: @test_id).map(&:name).join(", ")
         %th= patient.calculate_price(@service_id)
-        %td= patient.created_at.strftime("%d-%m-%Y at %I:%M%p")
+        / %td= patient.created_at.strftime("%d-%m-%Y at %I:%M%p")
         / %td{"data-patient-id" => patient.id}= check_box_tag 'is_paid', patient.is_paid, patient.is_paid
         %td
+          = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(patient.id), remote: true, :class => 'btn btn-mini'
           - if current_user.is_admin
-            = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(patient.id), remote: true, :class => 'btn btn-mini'
             = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_patient_path(patient), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
           - else
             .des-content

@@ -58,6 +58,8 @@ class Admin::PatientsController < ApplicationController
   def new
     @patient = Patient.new
     @services = @patient.services.build
+    @price_medicines = @patient.price_medicines.build 
+    @test = @patient.tests.build
   end
 
   # GET /patients/1/edit
@@ -142,6 +144,8 @@ class Admin::PatientsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def patient_params
       params.require(:patient).permit(:name, :age, :year, :address, :phone, :order, :user_id, 
-        :description, patients_services_attributes: [:id, :patient_id, :service_id, :price])
+        :description, patients_services_attributes: [:id, :patient_id, :service_id, :price], 
+        patients_price_medicines_attributes: [:id, :patient_id, :price_medicine_id, :price, :quantity], 
+        patients_tests_attributes: [:id, :patient_id, :test_id, :price])
     end
 end

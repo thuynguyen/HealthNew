@@ -3,34 +3,87 @@
     .modal-dialog
       .modal-content
         .modal-header
-          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-            %span{"aria-hidden" => "true"} ×
+          / %button.close.btn-close-patient{"aria-label" => "Close", "data-dismiss" => :modal, :type => "button"}
+          /   %span{"aria-hidden" => "true"} ×
+          .pull-right= link_to "x", admin_patients_path, :class => 'btn-close-patient'
           %h4#myModalLabel.modal-title= title
         .modal-body
           = simple_nested_form_for [:admin, patient], remote: true, :html => { :class => 'form-horizontal' } do |f|
-            = f.input :name
-            = f.input :phone
-            .phone-error{style: "color: red;"}
-            = f.input :order
-            = f.input :age
-            = #f.input :year
-            = f.input :address
+            %table.table.table-striped.span7
+              %thead
+                %tr
+                  %th{style: "width: 150px"} Tên
+                  %th{style: "width: 140px"} Số ĐT
+                  %th{style: "width: 40px"} Tuổi
+                  %th{style: "width: 40px"} Số TT
+                  %th{style: "width: 150px"} Địa Chỉ
+              %tbody
+                %tr
+                  %td= f.input :name, label: false, input_html: {style: "width: 150px"}
+                  %td
+                    = f.input :phone, label: false, input_html: {style: "width: 140px"}
+                  %td= f.input :age, label: false, input_html: {style: "width: 40px"}
+                  %td= f.input :order, label: false, input_html: {style: "width: 40px"}
+                  %td= f.input :address, label: false, input_html: {style: "width: 150px"}
             = f.input :user_id, :as => :hidden, input_html: {:class => 'input', value: current_user.id}
-            = f.input :description, :as => :text
+            = f.input :description, :as => :text, label: "Ghi Chu"
+            .clearfix
+            %p= f.link_to_add "Thêm Loại Khám", :patients_services
+            
             = f.fields_for :patients_services do |p_serv|
               = p_serv.input :patient_id, as: :hidden, input_html: { value: f.object.id}
               = p_serv.simple_fields_for(:service) do |serv|
-                .pull-left= p_serv.input :service_id, :collection => Service.all, :label => "Service Name"
-                .pull-left{style: "margin-left: 1em"}= serv.link_to_remove "Remove"
+                .pull-left= p_serv.input :service_id, :collection => Service.all, :label => "Khám"
+
+                - if current_user.is_admin && !p_serv.object.new_record?
+                  .pull-left{style: "margin-left: 1em"}= p_serv.link_to_remove "Remove"
+                - elsif !current_user.is_admin && p_serv.object.new_record?
+                  .pull-left{style: "margin-left: 1em"}= p_serv.link_to_remove "Remove"
                 .clearfix
               - if p_serv.object.new_record?
                 .other-price.hidden= p_serv.input :price
               - elsif !p_serv.object.price.nil?
                 .other-price= p_serv.input :price
               
-            %p= f.link_to_add "Add a service", :patients_services
+            
+
+            %div{style: "border: 1px solid grey; width: 50%; margin: 5px 18%"}
+            %p= f.link_to_add "Thêm Thuốc", :patients_price_medicines
+            = f.fields_for :patients_price_medicines do |p_price|
+              = p_price.input :patient_id, as: :hidden, input_html: { value: f.object.id}
+              = p_price.simple_fields_for(:price_medicine) do |price|
+                .pull-left= p_price.input :price_medicine_id, :collection => PriceMedicine.all, :label => "Ten Thuoc"
+                - if current_user.is_admin && !p_price.object.new_record?
+                  .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
+                - elsif !current_user.is_admin && p_price.object.new_record? 
+                  .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
+                .clearfix
+                = p_price.input :quantity, label: "Số lượng"
+              - if p_price.object.new_record?
+                .other-price.hidden= p_price.input :price
+              - elsif !p_price.object.price.nil?
+                .other-price= p_price.input :price
+              
+            
+            %div{style: "border: 1px solid grey; width: 50%; margin: 5px 18%"}
+            %p= f.link_to_add "Thêm XN", :patients_tests
+            = f.fields_for :patients_tests do |p_test|
+              = p_test.input :patient_id, as: :hidden, input_html: { value: f.object.id}
+              = p_test.simple_fields_for(:test) do |test|
+                .pull-left= p_test.input :test_id, :collection => Test.all, :label => "Loai XN"
+                - if current_user.is_admin && !p_test.object.new_record?
+                  .pull-left{style: "margin-left: 1em"}= p_test.link_to_remove "Remove"
+                - elsif !current_user.is_admin && p_test.object.new_record?
+                  .pull-left{style: "margin-left: 1em"}= p_test.link_to_remove "Remove"
+                .clearfix
+              - if p_test.object.new_record?
+                .other-price.hidden= p_test.input :price
+              - elsif !p_test.object.price.nil?
+                .other-price= p_test.input :price
+              
+            
             .form-actions
               = f.submit nil, :class => 'btn btn-primary'
-              = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_patients_path, :class => 'btn'
+              = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_patients_path, :class => 'btn btn-close-patient'
 
 

@@ -2,10 +2,20 @@
 class Patient < ActiveRecord::Base
   has_many :patients_services
   has_many :services, through: :patients_services
+
+  has_many :patients_tests
+  has_many :tests, through: :patients_tests
+
+  has_many :patients_price_medicines
+  has_many :price_medicines, through: :patients_price_medicines
+
   belongs_to :user
   validates :phone, presence: true
 
   accepts_nested_attributes_for :patients_services
+  accepts_nested_attributes_for :patients_tests
+  accepts_nested_attributes_for :patients_price_medicines
+
 
   SELECTS = {0 => "Tất ", 1 => "Ngày", 2 => "Tuần", 3 => "Tháng", 4 => "Năm"}
   TYPES = {0 => "Tất cả", 1 => "Khám", 2 => "Siêu Âm", 3 => "Sét Nghiệm", 4 => "Khác"}
@@ -64,9 +74,21 @@ class Patient < ActiveRecord::Base
     end
     
     sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
-    puts "============#{sers.inspect}"
     cal_price = cal_price + sers.inject(:+) unless sers.blank?
-    cal_price 
+
+    p_medicines = self.patients_price_medicines.map{|d| 
+                    d.quantity * PriceMedicine.find_by_id(d.price_medicine_id).price.to_f
+                  }
+    total_price_drugs = 0.0
+    total_price_drugs = p_medicines.inject(:+) unless p_medicines.blank?
+
+    tests = self.patients_tests.map{|t| 
+      test = Test.find_by_id(t.test_id)
+      test.price - test.origin_price
+    }
+    total_money_tests = 0.0
+    total_money_tests = tests.inject(:+) unless tests.blank?
+    cal_price = cal_price + total_price_drugs + total_money_tests
   end
 end
 
