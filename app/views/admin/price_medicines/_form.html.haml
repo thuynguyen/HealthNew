@@ -1,0 +1,12 @@
+= simple_form_for([:admin, @price_medicine]) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :unit, collection: PriceMedicine::UNITS.invert
+    = f.input :price
+
+  .form-actions
+    = f.button :submit
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_price_medicines_path, :class => 'btn'
+

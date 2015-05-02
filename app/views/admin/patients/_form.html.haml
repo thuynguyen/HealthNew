@@ -48,7 +48,7 @@
             
 
             %div{style: "border: 1px solid grey; width: 50%; margin: 5px 18%"}
-            %p= f.link_to_add "Thêm Thuốc", :patients_price_medicines
+            
             = f.fields_for :patients_price_medicines do |p_price|
               = p_price.input :patient_id, as: :hidden, input_html: { value: f.object.id}
               = p_price.simple_fields_for(:price_medicine) do |price|
@@ -63,7 +63,7 @@
                 .other-price.hidden= p_price.input :price
               - elsif !p_price.object.price.nil?
                 .other-price= p_price.input :price
-              
+            %p= f.link_to_add "Thêm Thuốc", :patients_price_medicines
             
             %div{style: "border: 1px solid grey; width: 50%; margin: 5px 18%"}
             %p= f.link_to_add "Thêm XN", :patients_tests
