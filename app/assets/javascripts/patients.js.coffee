@@ -99,7 +99,6 @@ class @Patient
       if (selected_value == "")
         $("select.pp_medicine option:selected").last().parent().parent().parent().parent().siblings(".other-price").removeClass("hidden")
         $("select.pp_medicine option:selected").last().parent().parent().parent().parent().siblings(".quantity-drug").addClass("hidden")
-      console.log("how are you?")
       return
 
     
