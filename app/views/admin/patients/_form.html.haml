@@ -28,37 +28,39 @@
             = f.input :user_id, :as => :hidden, input_html: {:class => 'input', value: current_user.id}
             = f.input :description, :as => :text, label: "Ghi Chu"
             .clearfix
-            %p= f.link_to_add "Thêm Loại Khám", :patients_services
+            
             
             = f.fields_for :patients_services do |p_serv|
               = p_serv.input :patient_id, as: :hidden, input_html: { value: f.object.id}
-              = p_serv.simple_fields_for(:service) do |serv|
-                .pull-left= p_serv.input :service_id, :collection => Service.all, :label => "Khám"
+              .pull-left= p_serv.input :service_id, :collection => Service.all, :label => "Khám", input_html: {id: "p_services"}
 
-                - if current_user.is_admin && !p_serv.object.new_record?
-                  .pull-left{style: "margin-left: 1em"}= p_serv.link_to_remove "Remove"
-                - elsif !current_user.is_admin && p_serv.object.new_record?
-                  .pull-left{style: "margin-left: 1em"}= p_serv.link_to_remove "Remove"
-                .clearfix
+              - if current_user.is_admin && !p_serv.object.new_record?
+                .pull-left{style: "margin-left: 1em"}= p_serv.link_to_remove "Remove"
+              - elsif !current_user.is_admin && p_serv.object.new_record?
+                .pull-left{style: "margin-left: 1em"}= p_serv.link_to_remove "Remove"
+              .clearfix
               - if p_serv.object.new_record?
                 .other-price.hidden= p_serv.input :price
               - elsif !p_serv.object.price.nil?
                 .other-price= p_serv.input :price
               
-            
+            %p= f.link_to_add "Thêm Loại Khám", :patients_services
 
             %div{style: "border: 1px solid grey; width: 50%; margin: 5px 18%"}
             
             = f.fields_for :patients_price_medicines do |p_price|
               = p_price.input :patient_id, as: :hidden, input_html: { value: f.object.id}
-              = p_price.simple_fields_for(:price_medicine) do |price|
-                .pull-left= p_price.input :price_medicine_id, :collection => PriceMedicine.all, :label => "Ten Thuoc"
-                - if current_user.is_admin && !p_price.object.new_record?
-                  .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
-                - elsif !current_user.is_admin && p_price.object.new_record? 
-                  .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
-                .clearfix
-                = p_price.input :quantity, label: "Số lượng"
+              .pull-left= p_price.input :price_medicine_id, :collection => PriceMedicine.all.map{|p| [p.name, p.id,"data-price" => p.price]}, :label => "Ten Thuoc", input_html: {class: "pp_medicine"}
+              - if current_user.is_admin && !p_price.object.new_record?
+                .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
+              - elsif !current_user.is_admin && p_price.object.new_record? 
+                .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
+              .clearfix
+              - if p_price.object.new_record?
+                .quantity-drug= p_price.input :quantity, label: "Số lượng"
+              - elsif !p_price.object.quantity.nil?
+                .other-price= p_price.input :quantity
+              
               - if p_price.object.new_record?
                 .other-price.hidden= p_price.input :price
               - elsif !p_price.object.price.nil?
@@ -66,24 +68,31 @@
             %p= f.link_to_add "Thêm Thuốc", :patients_price_medicines
             
             %div{style: "border: 1px solid grey; width: 50%; margin: 5px 18%"}
-            %p= f.link_to_add "Thêm XN", :patients_tests
             = f.fields_for :patients_tests do |p_test|
               = p_test.input :patient_id, as: :hidden, input_html: { value: f.object.id}
-              = p_test.simple_fields_for(:test) do |test|
-                .pull-left= p_test.input :test_id, :collection => Test.all, :label => "Loai XN"
-                - if current_user.is_admin && !p_test.object.new_record?
-                  .pull-left{style: "margin-left: 1em"}= p_test.link_to_remove "Remove"
-                - elsif !current_user.is_admin && p_test.object.new_record?
-                  .pull-left{style: "margin-left: 1em"}= p_test.link_to_remove "Remove"
-                .clearfix
+              .pull-left= p_test.input :test_id, :collection => Test.all, :label => "Loai XN"
+              - if current_user.is_admin && !p_test.object.new_record?
+                .pull-left{style: "margin-left: 1em"}= p_test.link_to_remove "Remove"
+              - elsif !current_user.is_admin && p_test.object.new_record?
+                .pull-left{style: "margin-left: 1em"}= p_test.link_to_remove "Remove"
+              .clearfix
               - if p_test.object.new_record?
                 .other-price.hidden= p_test.input :price
               - elsif !p_test.object.price.nil?
                 .other-price= p_test.input :price
-              
+            %p= f.link_to_add "Thêm XN", :patients_tests  
             
             .form-actions
               = f.submit nil, :class => 'btn btn-primary'
               = link_to t('.cancel', :default => t("helpers.links.cancel")), admin_patients_path, :class => 'btn btn-close-patient'
 
-
+:javascript 
+  patientObj.loadPatientInfo()
+  patientObj.otherPrice()
+  patientObj.checkPaid()
+  patientObj.addNote()
+  patientObj.focusPatient()
+  patientObj.changeMonth()
+  patientObj.loadPatientInfo()
+  patientObj.clearModal()
+  patientObj.changeElementWithEmptyPrice()

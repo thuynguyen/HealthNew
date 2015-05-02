@@ -8,16 +8,17 @@ class @Patient
     @changeMonth()
     @loadPatientInfo()
     @clearModal()
+    @changeElementWithEmptyPrice()
 
   datePicker: =>
     $("#datetimepicker4").datetimepicker pickTime: false
 
   otherPrice: =>
-    $(".patients").delegate "select", "change", ->
-      selected_value = $("select option:selected").last().text()
+    $(".patients").delegate "select#p_services", "change", ->
+      selected_value = $("select#p_services option:selected").last().text()
       console.log(selected_value)
       if (selected_value == "Khac")
-        $("select option:selected").last().parent().parent().parent().parent().siblings(".other-price").removeClass("hidden")
+        $("select#p_services option:selected").last().parent().parent().parent().parent().siblings(".other-price").removeClass("hidden")
       console.log("how are you?")
       return
 
@@ -91,7 +92,14 @@ class @Patient
       $('#newPatient').on 'hidden', ->
         $(this).data 'modal', null
       return
-
-
+  changeElementWithEmptyPrice: => 
+    $(".patients").delegate "select.pp_medicine", "change", (e)->
+      selected_value = $("select.pp_medicine option:selected").last().data("price")
+      console.log(selected_value)
+      if (selected_value == "")
+        $("select.pp_medicine option:selected").last().parent().parent().parent().parent().siblings(".other-price").removeClass("hidden")
+        $("select.pp_medicine option:selected").last().parent().parent().parent().parent().siblings(".quantity-drug").addClass("hidden")
+      console.log("how are you?")
+      return
 
     

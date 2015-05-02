@@ -73,22 +73,22 @@ class Patient < ActiveRecord::Base
       cal_price = sers.inject(:+) unless sers.blank?
     end
     
-    sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
-    cal_price = cal_price + sers.inject(:+) unless sers.blank?
+    # sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
+    # cal_price = cal_price + sers.inject(:+) unless sers.blank?
 
-    p_medicines = self.patients_price_medicines.map{|d| 
-                    d.quantity * PriceMedicine.find_by_id(d.price_medicine_id).price.to_f
-                  }
-    total_price_drugs = 0.0
-    total_price_drugs = p_medicines.inject(:+) unless p_medicines.blank?
+    # p_medicines = self.patients_price_medicines.map{|d| 
+    #                 d.quantity * PriceMedicine.find_by_id(d.price_medicine_id).price.to_f
+    #               }
+    total_price_drugs = 0
+    # total_price_drugs = p_medicines.inject(:+) unless p_medicines.blank?
 
-    tests = self.patients_tests.map{|t| 
-      test = Test.find_by_id(t.test_id)
-      test.price - test.origin_price
-    }
-    total_money_tests = 0.0
+    # tests = self.patients_tests.map{|t| 
+    #   test = Test.find_by_id(t.test_id)
+    #   test.price - test.origin_price
+    # }
+    total_money_tests = 0
     total_money_tests = tests.inject(:+) unless tests.blank?
-    cal_price = cal_price + total_price_drugs + total_money_tests
+    cal_price = cal_price #+ total_price_drugs + total_money_tests
   end
 end
 
