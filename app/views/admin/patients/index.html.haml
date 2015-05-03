@@ -1,25 +1,25 @@
 .well
-  - if current_user.is_admin
-    = form_tag(admin_patients_path, method: :get, remote: true, class: "patiens-form") do
-      .datetimepicker.input-append
-        %input{"data-format" => "yyyy-MM-dd", :type => "text", id: "from_date", name: "from_date", placeholder: "Choose from date"}
-        %span.add-on
-          %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"}
+  = form_tag(admin_patients_path, method: :get, remote: true, class: "patiens-form") do
+    .datetimepicker.input-append
+      %input{"data-format" => "yyyy-MM-dd", :type => "text", id: "from_date", name: "from_date", placeholder: "Choose from date"}
+      %span.add-on
+        %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"}
 
-      .datetimepicker.input-append
-        %input{"data-format" => "yyyy-MM-dd", :type => "text", id: "to_date", name: "to_date", placeholder: "Choose to date"}
-        %span.add-on
-          %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"} 
+    .datetimepicker.input-append
+      %input{"data-format" => "yyyy-MM-dd", :type => "text", id: "to_date", name: "to_date", placeholder: "Choose to date"}
+      %span.add-on
+        %i{"data-date-icon" => "icon-calendar", "data-time-icon" => "icon-time"} 
 
-      %input{:type => "hidden", id: "export", name: "export"}
-      = collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
-      = submit_tag("Find", class: "btn btn-primary", style: "margin-top: -0.8em")
-
+    %input{:type => "hidden", id: "export", name: "export"}
+    = collection_select :service, :id, Service.all, :id, :name, include_blank: "All"
+    = submit_tag("Find", class: "btn btn-primary", style: "margin-top: -0.8em")
+    - if current_user.is_admin
       = link_to "Export", admin_patients_path(:format => :xls, from_date: cookies[:from_date], to_date: cookies[:to_date]), class: "btn btn-primary btn-export", style: "margin-top: -0.8em"
       = link_to "Statistics", statistic_admin_patients_path, class: "btn btn-primary", style: "margin-top: -0.8em"
 .pull-left= link_to "New Patient", new_admin_patient_path, remote: true, :class => 'btn btn-primary'
 .patients
   = render partial: "patients", locals: {patients: @patients}
+
 :javascript
   $(".datetimepicker").datetimepicker({pickTime: false})
 

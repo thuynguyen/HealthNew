@@ -11,11 +11,11 @@
       = link_to "Nhập Thuốc", admin_medicines_path
     %li{class: "#{params[:controller] == "admin/services" ? 'active' : ''}"}
       = link_to "Bảng Giá", admin_services_path
+    %li{class: "#{params[:controller] == "admin/test" ? 'active' : ''}"}
+      = link_to "Giá XN", admin_tests_path
+    %li{class: "#{params[:controller] == "admin/price_medicines" ? 'active' : ''}"}
+      = link_to "Giá Thuốc", admin_price_medicines_path
     - if current_user.is_admin
-      %li{class: "#{params[:controller] == "admin/test" ? 'active' : ''}"}
-        = link_to "Giá XN", admin_tests_path
-      %li{class: "#{params[:controller] == "admin/price_medicines" ? 'active' : ''}"}
-        = link_to "Giá Thuốc", admin_price_medicines_path
       %li{class: "#{params[:controller] == "admin/users" ? 'active' : ''}"}
         = link_to "Users", admin_users_path
    

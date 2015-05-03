@@ -4,18 +4,17 @@
 %table.table.table-striped
   %thead
     %tr
-      %th= "Number"
-      %th= model_class.human_attribute_name(:name)
-      %th= model_class.human_attribute_name(:price)
-      %th=t '.actions', :default => t("helpers.actions")
+      %th= "Tên"
+      %th= "Giá"
+      %th
   %tbody
     - @services.each_with_index do |service, index|
       %tr
-        %td= index
         %td= service.name
         %td= service.price
         %td
-          = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_service_path(service), :class => 'btn btn-mini'
-          = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_service_path(service), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
-
-= link_to t('.new', :default => t("helpers.links.new")), new_admin_service_path, :class => 'btn btn-primary'
+          - if current_user.is_admin
+            = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_service_path(service), :class => 'btn btn-mini'
+            = link_to t('.destroy', :default => t("helpers.links.destroy")), admin_service_path(service), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
+- if current_user.is_admin
+  = link_to t('.new', :default => t("helpers.links.new")), new_admin_service_path, :class => 'btn btn-primary'

@@ -2,9 +2,10 @@
   = f.error_notification
 
   .form-inputs
-    = f.input :name
-    = f.input :unit, collection: PriceMedicine::UNITS.invert
-    = f.input :price
+    = f.input :name, label: "Tên"
+    = f.input :unit, collection: PriceMedicine::UNITS.invert, label: "Đơn vị"
+    = f.input :price, label: "Giá"
+    = f.input :origin_price, label: "Giá nhập"
 
   .form-actions
     = f.button :submit

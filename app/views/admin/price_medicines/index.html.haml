@@ -3,21 +3,24 @@
 %table.table.table-striped
   %thead
     %tr
-      %th Name
-      %th Unit
-      %th Price
-      %th
-      %th
-      %th
+      %th Tên
+      %th Đơn Vị
+      %th Giá
+      - if current_user.is_admin
+        %th
+        %th
+        %th
   %tbody
     - @price_medicines.each do |price_medicine|
       %tr
         %td= price_medicine.name
         %td= PriceMedicine::UNITS[price_medicine.unit]
         %td= price_medicine.price
-        %td= link_to 'Edit', edit_admin_price_medicine_path(price_medicine)
-        %td= link_to 'Destroy', [:admin, price_medicine], :method => :delete, :data => { :confirm => 'Are you sure?' }
+        - if current_user.is_admin
+          %td= price_medicine.origin_price
+          %td= link_to 'Edit', edit_admin_price_medicine_path(price_medicine)
+          %td= link_to 'Destroy', [:admin, price_medicine], :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
-
-= link_to 'New Price medicine', new_admin_price_medicine_path
+- if current_user.is_admin
+  = link_to 'New Price medicine', new_admin_price_medicine_path

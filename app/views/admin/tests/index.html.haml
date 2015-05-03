@@ -2,24 +2,24 @@
 %table.table.table-striped.table-hover
   %thead
     %tr
-      %th Name
-      %th Description
-      %th Price
-      %th Origin price
-      %th
-      %th
-      %th
+      %th Tên
+      %th Ghi Chú
+      %th Giá
+      - if current_user.is_admin
+        %th Origin price
+        %th
+        %th
   %tbody
     - @tests.each do |test|
       %tr
         %td= test.name
         %td= test.description
         %td= test.price
-        %td= test.origin_price
-        %td= link_to 'Show', [:admin, test]
-        %td= link_to 'Edit', edit_admin_test_path(test)
-        %td= link_to 'Destroy', [:admin, test], :method => :delete, :data => { :confirm => 'Are you sure?' }
+        - if current_user.is_admin
+          %td= test.origin_price
+          %td= link_to 'Edit', edit_admin_test_path(test)
+          %td= link_to 'Destroy', [:admin, test], :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
-
-= link_to 'New Test', new_admin_test_path
+- if current_user.is_admin
+  = link_to 'New Test', new_admin_test_path

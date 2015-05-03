@@ -1,7 +1,7 @@
 $(".patients").html("<%= escape_javascript(render partial: 'patients', locals: {patients: @patients, title: 'Create Patient'}) %>")
 <%- if @patient.errors.any?%>
-  $(".phone-error").html("Vui Long nhap so dien thoai")
   $('#newPatient').modal('show')
+  $(".phone-error").html("Vui Long nhap so dien thoai")
 <%- else%>
   $('#newPatient').modal('hide')
 <%- end%>

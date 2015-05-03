@@ -6,4 +6,5 @@ $(".patients").html("<%= escape_javascript(render partial: 'patients', locals: {
   $('#newPatient').on('hidden', function(){
     $(this).data('modal', null);
   });
+  $('#newPatient').modal('hide')
 <%- end%>
