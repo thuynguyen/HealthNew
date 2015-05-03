@@ -96,7 +96,7 @@ class @Patient
     $(".patients").delegate "select.pp_medicine", "change", (e)->
       selected_value = $("select.pp_medicine option:selected").last().data("price")
       console.log(selected_value)
-      if (selected_value == "")
+      if (selected_value == undefined)
         $("select.pp_medicine option:selected").last().parent().parent().parent().parent().siblings(".other-price").removeClass("hidden")
         $("select.pp_medicine option:selected").last().parent().parent().parent().parent().siblings(".quantity-drug").addClass("hidden")
       return

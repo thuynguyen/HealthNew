@@ -7,15 +7,17 @@
       %th{style: "width: 8%"}= "Tên"
       %th{style: "width: 4%"}= "STT"
       %th{style: "width: 5%"}= "Tuổi"
-      %th{style: "width: 5%"}= "Địa Chỉ"
-      %th{style: "width: 11%"}= "Người Trực"
+      %th{style: "width: 6%"}= "Địa Chỉ"
+      / %th{style: "width: 11%"}= "Người Trực"
       %th{style: "width: 14%"}= "Khám"
       %th{style: "width: 11%"}= "Thuốc"
       %th{style: "width: 10%"}= "XN"
       %th{style: "width: 8%"}= "Thành Tiền"
+      - if current_user.is_admin
+        %th{style: "width: 8%"}= "Lời"
       
       /%th{style: "width: 8%"}= "Thanh Toán"
-      %th{style: "width: 8%"}
+      %th
         - unless current_user.is_admin
           Ghi Chu
   %tbody
@@ -25,7 +27,7 @@
         %td= patient.order
         %td= patient.age || patient.year
         %td= patient.address
-        %td= patient.user.try(:name)
+        / %td= patient.user.try(:name)
         %th
           - if @service_id.blank?
             = patient.services.map(&:name).join(", ")
@@ -41,9 +43,9 @@
             = patient.tests.map(&:name).join(", ")
           - else
             = patient.tests.where(id: @test_id).map(&:name).join(", ")
-        %th= patient.calculate_price(@service_id)
-        / %td= patient.created_at.strftime("%d-%m-%Y at %I:%M%p")
-        / %td{"data-patient-id" => patient.id}= check_box_tag 'is_paid', patient.is_paid, patient.is_paid
+        %th= patient.calculate_price(@service_id)[:cal_price]
+        - if current_user.is_admin
+          %th= patient.calculate_price(@service_id)[:origin_cal_price]
         %td
           = link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_patient_path(patient.id), remote: true, :class => 'btn btn-mini'
           - if current_user.is_admin

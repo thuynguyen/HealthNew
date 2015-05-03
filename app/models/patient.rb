@@ -48,7 +48,7 @@ class Patient < ActiveRecord::Base
     end
     sum_money = 0.0
     results.each do |p|
-      sum_money = sum_money + p.calculate_price(conds[:service_id])
+      sum_money = sum_money + p.calculate_price(conds[:service_id])[:cal_price]
     end
     {patients: results.order("created_at DESC"), total_money: sum_money, service: Service.find_by_id(conds[:service_id]).try(:name) || "All"}
   end
@@ -61,7 +61,7 @@ class Patient < ActiveRecord::Base
       address: self.address, 
       user: "nguoi truc", 
       services: self.services.map(&:name).join(", "), 
-      prices: self.calculate_price, 
+      prices: self.calculate_price[:cal_price], 
       created_at: self.created_at
     }
   end
@@ -73,22 +73,33 @@ class Patient < ActiveRecord::Base
       cal_price = sers.inject(:+) unless sers.blank?
     end
     
-    # sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
-    # cal_price = cal_price + sers.inject(:+) unless sers.blank?
+    sers = self.services.select{|s| !s.price.nil?}.map{|l| l.price}
+    cal_price = cal_price + sers.inject(:+) unless sers.blank?
+    
+    total_price_drugs = 0.to_f
+    self.patients_price_medicines.map{|d| 
+                unit_price = PriceMedicine.find_by_id(d.price_medicine_id).price
+                
+                if unit_price.blank? && !d.price.blank?
+                  puts [unit_price, d.price, d.quantity].inspect
+                  total_price_drugs = total_price_drugs + d.price 
+                else 
+                  puts [unit_price, d.price, d.quantity].inspect
+                  total_price_drugs = total_price_drugs + d.quantity * unit_price unless d.quantity.blank?
+                end
+              }
 
-    # p_medicines = self.patients_price_medicines.map{|d| 
-    #                 d.quantity * PriceMedicine.find_by_id(d.price_medicine_id).price.to_f
-    #               }
-    total_price_drugs = 0
-    # total_price_drugs = p_medicines.inject(:+) unless p_medicines.blank?
+    total_money_tests = 0.to_f
+    origin_total_money_tests = 0.to_f
+    self.patients_tests.map{|t| 
+      test = Test.find_by_id(t.test_id)
+      origin_total_money_tests += (test.price - test.origin_price)
+      total_money_tests += test.price
+    }
+    total_cal_price = cal_price + total_price_drugs + total_money_tests
+    total_origin_cal_price = cal_price + total_price_drugs + origin_total_money_tests
 
-    # tests = self.patients_tests.map{|t| 
-    #   test = Test.find_by_id(t.test_id)
-    #   test.price - test.origin_price
-    # }
-    total_money_tests = 0
-    total_money_tests = tests.inject(:+) unless tests.blank?
-    cal_price = cal_price #+ total_price_drugs + total_money_tests
+    {cal_price: total_cal_price, origin_cal_price: total_origin_cal_price}
   end
 end
 

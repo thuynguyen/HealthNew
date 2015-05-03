@@ -50,7 +50,7 @@
             
             = f.fields_for :patients_price_medicines do |p_price|
               = p_price.input :patient_id, as: :hidden, input_html: { value: f.object.id}
-              .pull-left= p_price.input :price_medicine_id, :collection => PriceMedicine.all.map{|p| [p.name, p.id,"data-price" => p.price]}, :label => "Ten Thuoc", input_html: {class: "pp_medicine"}
+              .pull-left= p_price.input :price_medicine_id, :collection => PriceMedicine.all.map{|p| [p.name, p.id, "data-price" => p.price]}, :label => "Ten Thuoc", input_html: {class: "pp_medicine"}
               - if current_user.is_admin && !p_price.object.new_record?
                 .pull-left{style: "margin-left: 1em"}= p_price.link_to_remove "Remove"
               - elsif !current_user.is_admin && p_price.object.new_record? 

@@ -29,7 +29,7 @@
             = patient.services.map(&:name).join(", ")
           - else
             = patient.services.where(id: @service_id).map(&:name).join(", ")
-        %th= patient.calculate_price(@service_id)
+        %th= patient.calculate_price(@service_id)[:cal_price]
         %td= patient.created_at.strftime("%d-%m-%Y at %I:%M%p")
         
         %td
